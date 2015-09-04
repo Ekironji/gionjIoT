@@ -19,15 +19,20 @@ def main(argv):
 
 	sock = socket.socket(socket.AF_INET, # Internet
                      socket.SOCK_DGRAM) # UDP
-	sock.sendto(sendDataString, (UDP_IP, UDP_PORT))
+    # broadcast configuration                  
+	sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+	sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+	
+	# request send
+	sock.sendto(sendDataString, ('255.255.255.255', UDP_PORT))
 	
 	data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
-	print "received message:", data
 	
 	## decodifico col json
 	decodedJson = json.loads(data)
 	
-	print 'ip_address' + decodedJson['ip_address']
+	if decodedJson['response'] == 'true':
+		print 'ip_address' + decodedJson['ip_address']
 	
 	exit
     

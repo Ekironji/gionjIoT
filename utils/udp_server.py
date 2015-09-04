@@ -39,29 +39,26 @@ while True:
 		data, clientAddress = UDPSock.recvfrom(1024)
 		
 		# vecchio print data
-		print data, ' ', clientAddress[0], '  bytes: ', ord(data[3]), ' ', ord(data[2]), ' ', ord(data[1]), ' ', ord(data[0])
+		##print data, ' ', clientAddress[0], '  bytes: ', ord(data[3]), ' ', ord(data[2]), ' ', ord(data[1]), ' ', ord(data[0])
 		
 		# spacchetto il json
-		try:
-			decodedJson = json.loads(data)
-		except (ValueError, KeyError, TypeError):
-			print >> sys.stderr, "(Json parser) JSON format error"
+		#~ try:
+			#~ decodedJson = json.loads(data)
+		#~ except (ValueError, KeyError, TypeError):
+			#~ print >> sys.stderr, "(Json parser) JSON format error"
 		
-		request = decodedJson['request']
-		key = decodedJson['key']
+		#~ request = decodedJson['request']
+		#~ key = decodedJson['key']
 		
-		# controllo il contenuto del messaggio
-		#
-		# request
-		# key
-		#
-		if request == "whois":
-			responseData = {'response':'true','name':'udoo-'+getHwAddr('eth0'),'ip_address':local_ip,'service_available':'','key':key}
-		else:
-			responseData = {'response':'false','key':key}
+		# controllo il contenuto del messaggio: request, key
+
+		#~ if request == "whois":
+			#~ responseData = {'response':'true','name':'udoo-'+getHwAddr('eth0'),'ip_address':local_ip,'service_available':'','key':key}
+		#~ else:
+			#~ responseData = {'response':'false','key':key}
 		
 		# pack response
-		responseDataString = json.dumps(responseData)	
+		#~ responseDataString = json.dumps(responseData)	
 		
 		# invio risposta indietro
 		UDPSock.sendto(responseDataString, clientAddress)

@@ -1,0 +1,23 @@
+REQUEST
+	startConnection(netId, deviceAlias)
+	
+	getStatus()
+	
+	getAvailableServices()
+	getServiceDescription(serviceType)
+	
+	getActiveServices()
+	
+	addService(serviceType,  serviceSubType, params)
+	setService(service_id, params)
+	deleteService()
+	
+	[   OPTIONALS    ]
+	[ startService ]
+	[ restartService ]
+	[ stopService ]
+	
+	getActiveConnections()
+	setConnections(src_addr, src_sevice_id, dst_addrdst_service)
+	deleteConnections(id)
+	
