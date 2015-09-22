@@ -19,8 +19,7 @@ def main(argv):
    UDP_PORT = 10001
 	
    sendData = {'REQUEST':'LOOKUP','HOSTNAME':'NODE_'+str(sys.argv[1]),"SERVICES":"accelerometer"}
-   time.sleep(1)
-
+   
    sendDataString = json.dumps(sendData)	
 
    sock = socket.socket(socket.AF_INET, # Internet
@@ -29,11 +28,18 @@ def main(argv):
    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
    sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 	
-	# request send
-   sock.sendto(sendDataString, ('255.255.255.255', UDP_PORT))
-	
-   data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
-	
+   # request send
+   serverIpNotReady = 1
+   while serverIpNotReady:
+      try:
+         print "Lookup attempt: " + serverIpNotReady
+         sock.sendto(sendDataString, ('255.255.255.255', UDP_PORT))
+         sock.settimeout(2)
+         data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
+         serverIpNotReady = 0
+      except socket.error:
+         serverIpNotReady += 1
+      
 	## decodifico col json
    decodedJson = json.loads(data)
 
