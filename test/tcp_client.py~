@@ -32,7 +32,7 @@ def main(argv):
    serverIpNotReady = 1
    while serverIpNotReady:
       try:
-         print "Lookup attempt: " + serverIpNotReady
+         print "Lookup attempt: " + str(serverIpNotReady)
          sock.sendto(sendDataString, ('255.255.255.255', UDP_PORT))
          sock.settimeout(2)
          data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
@@ -81,22 +81,27 @@ def main(argv):
       while 1:
          # read sensor and parse
          acc = open('/sys/class/misc/FreescaleAccelerometer/data')
+         mag = open('/sys/class/misc/FreescaleMagnetometer/data')
+         gyr = open('/sys/class/misc/FreescaleGyroscope/data')
+
          accs = acc.read().replace('\n','').split(",")
+         mags = mag.read().replace('\n','').split(",")
+         gyrs = gyr.read().replace('\n','').split(",")
          # prepare string
-         sensorData = {"REQUEST":"SENSORS_DATA","HOSTNAME":'NODE_'+str(sys.argv[1]),"LABELS":"aX|aY|aZ","VALUES": str(accs[0])+'|'+str(accs[1])+'|'+str(accs[2]) }
+         sensorData = {"REQUEST":"SENSORS_DATA","HOSTNAME":'NODE_'+str(sys.argv[1]),"LABELS":"aX|aY|aZ|mX|mY|mZ|gX|gY|gZ","VALUES": str(accs[0])+'|'+str(accs[1])+'|'+str(accs[2])+'|'+str(mags[0])+'|'+str(mags[1])+'|'+str(mags[2])+'|'+str(gyrs[0])+'|'+str(gyrs[1])+'|'+str(gyrs[2]) }
          # prepare json
          MESSAGE = json.dumps(sensorData)     
          print MESSAGE
          # send message
          s.send(MESSAGE)
          data = s.recv(BUFFER_SIZE)
-         time.sleep(1)
+         time.sleep(0.1)
       s.close()
    except KeyboardInterrupt:		
       s.close()
       print "INTERRUZIONE"  
 
-   print "(belzedootest.py) tcp response:", data
+   print "(gionjiot.py) tcp response:", data
 
 if __name__ == "__main__":
    main(sys.argv[1:])
